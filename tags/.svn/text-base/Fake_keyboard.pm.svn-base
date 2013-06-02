@@ -1,0 +1,44 @@
+package Fake_keyboard;
+	use IO::Select;
+	use IO::Handle;
+		
+	
+	
+	my $buf_in_var;
+	my $buf_out_var;
+	
+	my $buf_in=IO::Handle->new();
+	my $buf_out=IO::Handle->new();
+	
+	$buf_in->setvbuf($buf_in_var, _IOLBF, 1024);
+	
+	$buf_out->setvbuf($buf_out_var, _IOLBF, 1024);
+	
+	#------------------------------------------------------------------	
+	sub new{		
+		$class = shift;	
+		my $in = IO::Select->new(\*STDIN);			
+		my $out = IO::Select->new(\*STDOUT);	
+		$self = {in => $in, out => $out};
+		return bless $self, $class;		
+	}
+	#------------------------------------------------------------------
+	sub can(){	
+		$self = shift;
+		if ($self->{in}->can_read(2)){			
+			return 1;
+		}
+		return 0;
+	}
+	#------------------------------------------------------------------
+	sub readline{
+		return <STDIN>;
+	}
+	#------------------------------------------------------------------
+	sub printline{		
+		$class = shift;
+		$what = shift;		
+		print <STDOUT>, $what;
+	}
+	#------------------------------------------------------------------
+1;
